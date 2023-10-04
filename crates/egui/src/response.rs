@@ -410,6 +410,23 @@ impl Response {
         self
     }
 
+    /// Like `on_hover_ui`, but show the ui at a suggested position.
+    pub fn on_hover_ui_at_position(
+        self,
+        suggested_position: Pos2,
+        add_contents: impl FnOnce(&mut Ui),
+    ) -> Self {
+        if self.should_show_hover_ui() {
+            crate::containers::show_tooltip_at(
+                &self.ctx,
+                self.id.with("__tooltip"),
+                Some(suggested_position),
+                add_contents,
+            );
+        }
+        self
+    }
+
     /// Was the tooltip open last frame?
     pub fn is_tooltip_open(&self) -> bool {
         crate::popup::was_tooltip_open_last_frame(&self.ctx, self.id.with("__tooltip"))
